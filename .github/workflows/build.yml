@@ -5,42 +5,36 @@ on:
     branches:
       - main
   workflow_dispatch:
-    inputs:
-      bundle:
-        type: boolean
-        description: Build a mapping bundle.
-      web:
-        type: boolean
-        description: Build the documentation site.
+#    inputs:
+#      bundle:
+#        type: boolean
+#        description: Build a mapping bundle.
+#      web:
+#        type: boolean
+#        description: Build the documentation site.
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 21
-        uses: actions/setup-java@v3
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
-          java-version: 21
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-      - name: Publish bundle with Gradle
-        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.bundle == 'true' }}
-        run: ./gradlew publish --stacktrace --info
-        env:
-          REPO_USERNAME: ${{ secrets.REPO_USERNAME }}
-          REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
+          java-version: 25
       - name: Publish web with Gradle
         run: ./gradlew buildWeb --stacktrace --info
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.web == 'true' }}
-        env:
-          REPO_USERNAME: ${{ secrets.REPO_USERNAME }}
-          REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
+#        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.web == 'true' }}
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.web == 'true' }}
+        uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4
+#        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.web == 'true' }}
         with:
           folder: build/takenaka/web
-          single-commit: true
           commit-message: 'build: update with ${{ github.sha }}'

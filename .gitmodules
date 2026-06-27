@@ -1,0 +1,3 @@
+[submodule "takenaka"]
+	path = takenaka
+	url = https://github.com/RelativityMC/takenaka.git
