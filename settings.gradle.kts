@@ -1,5 +1,5 @@
 pluginManagement {
-    includeBuild("stub")
+    includeBuild("build-logic")
     repositories {
         gradlePluginPortal()
         mavenCentral()
