@@ -344,7 +344,7 @@ val webConfig = buildWebConfig {
     )
 
     transformer(CSSInliningTransformer("cdn.jsdelivr.net"))
-    transformer(MinifyingTransformer())
+//    transformer(MinifyingTransformer())
     index(modularClassSearchIndexOf(JDK_25_BASE_URL))
 
     replaceCraftBukkitVersions("spigot")
