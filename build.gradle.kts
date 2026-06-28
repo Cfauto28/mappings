@@ -3,9 +3,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import me.kcra.takenaka.core.*
-import me.kcra.takenaka.core.mapping.MappingsMap
-import me.kcra.takenaka.core.mapping.MutableMappingsMap
-import me.kcra.takenaka.core.mapping.WrappingContributor
 import me.kcra.takenaka.core.mapping.adapter.*
 import me.kcra.takenaka.core.mapping.analysis.impl.AnalysisOptions
 import me.kcra.takenaka.core.mapping.analysis.impl.MappingAnalyzerImpl
@@ -21,9 +18,11 @@ import me.kcra.takenaka.generator.web.buildWebConfig
 import me.kcra.takenaka.generator.web.modularClassSearchIndexOf
 import me.kcra.takenaka.generator.web.transformers.CSSInliningTransformer
 import me.kcra.takenaka.generator.web.transformers.MinifyingTransformer
+import net.fabricmc.mappingio.format.tiny.Tiny2FileReader
 import net.fabricmc.mappingio.format.tiny.Tiny2FileWriter
 import net.fabricmc.mappingio.tree.MappingTree
-import kotlin.io.path.moveTo
+import net.fabricmc.mappingio.tree.MemoryMappingTree
+import kotlin.io.path.bufferedReader
 import kotlin.io.path.writeText
 import kotlin.io.path.writer
 
@@ -203,12 +202,42 @@ val ancestryNamespaces = listOf("modern-intermediary")
 
 val ancestryProvider = CachedAncestryProvider(SimpleAncestryProvider(null, ancestryNamespaces))
 
+val versionedMappingsOutputs = mappingProvider.mappingConfig.versions.map { manifest[it]!!.id to bundleWorkspace["${manifest[it]!!.id}.tiny"] }.toMap()
+
+fun tiny2Escape(str: String): String {
+    val len: Int = str.length
+    var start = 0
+
+    var toEscape = "\\\n\r\u0000\t"
+    var escaped = "\\nr0t"
+
+    val out = StringBuilder()
+
+    for (pos in 0..<len) {
+        val c: Char = str.get(pos)
+        val idx = toEscape.indexOf(c)
+
+        if (idx >= 0) {
+            out.append(str, start, pos)
+            out.append('\\')
+            out.append(escaped[idx])
+            start = pos + 1
+        }
+    }
+
+    out.append(str, start, len)
+
+    return out.toString()
+}
+
 val resolveMappings = tasks.register("resolveMappings") {
     group = "takenaka"
     description = "Resolves basic mappings for Mojang-based server development on all defined versions."
 
+    outputs.files(versionedMappingsOutputs)
+
     doLast {
-        this.extra["mappings"] = runBlocking {
+        val mappings = runBlocking {
             mappingProvider.get(analyzer)
                 .apply {
                     analyzer.problemKinds.forEach { kind ->
@@ -238,15 +267,14 @@ val resolveMappings = tasks.register("resolveMappings") {
                     }
                 }
         }
-    }
 
-    // make bundleable mappings
-    doLast {
-        @Suppress("UNCHECKED_CAST")
-        val mappings = this.extra["mappings"] as MappingsMap
-
+        // make bundleable mappings
         mappings.forEach { (version, tree) ->
-            Tiny2FileWriter(bundleWorkspace["${version.id}.tiny"].writer(), false)
+            val metadataList = tree.metadata.map { it.key to tiny2Escape(it.value!!) }.toList()
+            tree.metadata.clear()
+            metadataList.forEach { (key, value) -> (tree as MemoryMappingTree).visitMetadata(key, value) }
+
+            Tiny2FileWriter(versionedMappingsOutputs[version.id]!!.writer(), false)
                 .use { w -> tree.accept(MissingDescriptorFilter(w)) }
         }
     }
@@ -337,12 +365,20 @@ val buildWeb = tasks.register("buildWeb") {
     description = "Builds a web documentation site for mappings of all defined versions."
 
     dependsOn(resolveMappings)
+    inputs.files(versionedMappingsOutputs.values)
 //    finalizedBy(copyMain)
     doLast {
         runBlocking {
+            val mappings = versionedMappingsOutputs.map { (version, mappingPath) ->
+                val mappingTree = MemoryMappingTree()
+                Tiny2FileReader.read(mappingPath.bufferedReader(), mappingTree)
+
+                manifest[version]!! to mappingTree
+            }.toMap()
+
             @Suppress("UNCHECKED_CAST")
             generator.generate(
-                SimpleMappingProvider(resolveMappings.get().extra["mappings"] as MutableMappingsMap),
+                SimpleMappingProvider(mappings),
                 ancestryProvider
             )
         }
