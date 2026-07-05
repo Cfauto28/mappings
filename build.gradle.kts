@@ -44,7 +44,7 @@ group = "me.kcra.takenaka" // change me
 // format: <oldest version>+<newest version>[-SNAPSHOT]
 // this is included in META-INF/MANIFEST.MF under Implementation-Version
 // be nice to people who use the bundles and don't change the format
-version = "26.1+26.3" // change me
+version = "1.8+26.2" // change me
 
 /**
  * A three-way choice of mappings.
@@ -108,7 +108,7 @@ val manifest = VersionManifest(
     mojangManifest.latest,
     mojangManifest.versions + experimentalManifest.versions
 )
-//val yarnProvider = YarnMetadataProvider(sharedCacheWorkspace)
+val yarnProvider = YarnMetadataProvider(sharedCacheWorkspace)
 val modernYarnProvider = ModernYarnMetadataProvider(sharedCacheWorkspace)
 val mappingConfig = buildMappingConfig {
     version("1.21.11_unobfuscated")
@@ -128,9 +128,9 @@ val mappingConfig = buildMappingConfig {
     workspace(mappingCacheWorkspace)
 
     // remove Searge's ID namespace, it's not necessary
-//    intercept { v ->
-//        NamespaceFilter(v, "searge_id")
-//    }
+    intercept { v ->
+        NamespaceFilter(v, "searge_id")
+    }
     // remove static initializers, not needed in the documentation
     intercept(::StaticInitializerFilter)
     // remove overrides of java/lang/Object, they are implicit
@@ -140,7 +140,7 @@ val mappingConfig = buildMappingConfig {
 
     contributors { versionWorkspace ->
         val mojangProvider = MojangManifestAttributeProvider(versionWorkspace)
-//        val spigotProvider = SpigotManifestProvider(versionWorkspace)
+        val spigotProvider = SpigotManifestProvider(versionWorkspace)
 
         buildList {
             if (platform.wantsServer) {
@@ -154,30 +154,30 @@ val mappingConfig = buildMappingConfig {
 
             add(ModernIntermediaryMappingResolver(versionWorkspace, sharedCacheWorkspace))
             add(ModernYarnMappingResolver(versionWorkspace, modernYarnProvider))
-//            add(IntermediaryMappingResolver(versionWorkspace, sharedCacheWorkspace))
-//            add(YarnMappingResolver(versionWorkspace, yarnProvider))
-//            add(
-//                WrappingContributor(
-//                    SeargeMappingResolver(versionWorkspace, sharedCacheWorkspace),
-//                    // remove obfuscated method parameter names, they are a filler from Searge
-//                    ::MethodArgSourceFilter
-//                )
-//            )
+            add(IntermediaryMappingResolver(versionWorkspace, sharedCacheWorkspace))
+            add(YarnMappingResolver(versionWorkspace, yarnProvider))
+            add(
+                WrappingContributor(
+                    SeargeMappingResolver(versionWorkspace, sharedCacheWorkspace),
+                    // remove obfuscated method parameter names, they are a filler from Searge
+                    ::MethodArgSourceFilter
+                )
+            )
 
             // Spigot resolvers have to be last
-//            if (platform.wantsServer) {
-//                val link = LegacySpigotMappingPrepender.Link()
-//
-//                add(
-//                    // 1.16.5 mappings have been republished with proper packages, even though the reobfuscated JAR does not have those
-//                    // See: https://hub.spigotmc.org/stash/projects/SPIGOT/repos/builddata/commits/80d35549ec67b87a0cdf0d897abbe826ba34ac27
-//                    link.createPrependingContributor(
-//                        SpigotClassMappingResolver(versionWorkspace, spigotProvider),
-//                        prependEverything = versionWorkspace.version.id == "1.16.5"
-//                    )
-//                )
-//                add(link.createPrependingContributor(SpigotMemberMappingResolver(versionWorkspace, spigotProvider)))
-//            }
+            if (platform.wantsServer) {
+                val link = LegacySpigotMappingPrepender.Link()
+
+                add(
+                    // 1.16.5 mappings have been republished with proper packages, even though the reobfuscated JAR does not have those
+                    // See: https://hub.spigotmc.org/stash/projects/SPIGOT/repos/builddata/commits/80d35549ec67b87a0cdf0d897abbe826ba34ac27
+                    link.createPrependingContributor(
+                        SpigotClassMappingResolver(versionWorkspace, spigotProvider),
+                        prependEverything = versionWorkspace.version.id == "1.16.5"
+                    )
+                )
+                add(link.createPrependingContributor(SpigotMemberMappingResolver(versionWorkspace, spigotProvider)))
+            }
         }
     }
 
@@ -195,16 +195,16 @@ val mappingConfig = buildMappingConfig {
 val mappingProvider = ResolvingMappingProvider(mappingConfig, manifest)
 val analyzer = MappingAnalyzerImpl(
     AnalysisOptions(
-//        innerClassNameCompletionCandidates = setOf("spigot"),
-//        inheritanceAdditionalNamespaces = setOf("searge") // mojang could be here too for maximal parity, but that's in exchange for a little bit of performance
+        innerClassNameCompletionCandidates = setOf("spigot"),
+        inheritanceAdditionalNamespaces = setOf("searge") // mojang could be here too for maximal parity, but that's in exchange for a little bit of performance
         innerClassNameCompletionCandidates = setOf(),
         inheritanceAdditionalNamespaces = setOf()
     )
 )
 
 val ancestryIndexNs = "takenaka_node"
-//val ancestryNamespaces = listOf("mojang", "spigot", "searge", "intermediary")
-val ancestryNamespaces = listOf("modern-intermediary", "mojang")
+
+val ancestryNamespaces = listOf("modern-intermediary", "mojang", "spigot", "searge",)
 
 val ancestryProvider = CachedAncestryProvider(SimpleAncestryProvider(null, ancestryNamespaces))
 
@@ -251,7 +251,7 @@ val resolveMappings = tasks.register("resolveMappings") {
 
                         analyzer.acceptResolutions(kind)
                     }
-//                    analyzer.acceptResolutions()
+                    analyzer.acceptResolutions()
 
                     // add ancestry indices
                     runBlocking {
@@ -355,7 +355,7 @@ val webConfig = buildWebConfig {
 
     replaceCraftBukkitVersions("spigot")
     friendlyNamespaces("modern-yarn", "modern-intermediary", "yarn", "intermediary", "mojang", "spigot", "searge", "source")
-    // namespace("mojang", "Mojang", "#4D7C0F", AbstractMojangMappingResolver.META_LICENSE)
+     namespace("mojang", "Mojang", "#4D7C0F", AbstractMojangMappingResolver.META_LICENSE)
     namespace("spigot", "Spigot", "#CA8A04", AbstractSpigotMappingResolver.META_LICENSE)
     namespace("yarn", "Yarn", "#626262", YarnMappingResolver.META_LICENSE)
     namespace("searge", "Searge", "#B91C1C", SeargeMappingResolver.META_LICENSE)
@@ -391,7 +391,7 @@ val buildWeb = tasks.register("buildWeb") {
     }
     doLast {
         webWorkspace[".nojekyll"].writeText("")
-        webWorkspace["CNAME"].writeText("mappings.relativitymc.org") // change me, remove if you want to build for a *.github.io domain
+//        webWorkspace["CNAME"].writeText("mappings.relativitymc.org") // change me, remove if you want to build for a *.github.io domain
     }
 }
 
