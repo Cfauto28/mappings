@@ -156,13 +156,7 @@ val mappingConfig = buildMappingConfig {
             add(ModernYarnMappingResolver(versionWorkspace, modernYarnProvider))
             add(IntermediaryMappingResolver(versionWorkspace, sharedCacheWorkspace))
             add(YarnMappingResolver(versionWorkspace, yarnProvider))
-            add(
-                WrappingContributor(
-                    SeargeMappingResolver(versionWorkspace, sharedCacheWorkspace),
-                    // remove obfuscated method parameter names, they are a filler from Searge
-                    ::MethodArgSourceFilter
-                )
-            )
+            add(SeargeMappingResolver(versionWorkspace, sharedCacheWorkspace))
 
             // Spigot resolvers have to be last
             if (platform.wantsServer) {
