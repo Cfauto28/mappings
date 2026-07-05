@@ -119,7 +119,7 @@ val mappingConfig = buildMappingConfig {
                 // exclude 1.16 and 1.10.1, they don't have most mappings and are basically not used at all
                 // exclude 1.8.9, client-only update - no Spigot mappings, no thank you
                 // exclude 1.9.1 and 1.9.3 - no mappings at all
-                exclude("1.16", "1.10.1", "1.8.9", "1.9.1", "1.9.3", "1.20", "1.20.3", "1.20.5", "1.21.2")
+                exclude("1.16", "1.10.1", "1.8.9", "1.9.1", "1.9.3", "1.20", "1.20.3", "1.20.5", "1.21.2", "1.12.1")
                 // include only releases, no snapshots
                 includeTypes(Version.Type.RELEASE)
             }
