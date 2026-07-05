@@ -114,7 +114,12 @@ val mappingConfig = buildMappingConfig {
     version("1.21.11_unobfuscated")
     version(
         manifest
-            .range("26.1", null) { // change me
+            .range("1.8.8", "26.2") { // change me
+                // exclude 1.20, 1.20.3, 1.20.5 and 1.21.2 - hotfixed versions
+                // exclude 1.16 and 1.10.1, they don't have most mappings and are basically not used at all
+                // exclude 1.8.9, client-only update - no Spigot mappings, no thank you
+                // exclude 1.9.1 and 1.9.3 - no mappings at all
+                exclude("1.16", "1.10.1", "1.8.9", "1.9.1", "1.9.3", "1.20", "1.20.3", "1.20.5", "1.21.2")
                 // include only releases, no snapshots
                 includeTypes(Version.Type.RELEASE)
             }
