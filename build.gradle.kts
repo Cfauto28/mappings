@@ -197,8 +197,8 @@ val analyzer = MappingAnalyzerImpl(
     AnalysisOptions(
         innerClassNameCompletionCandidates = setOf("spigot"),
         inheritanceAdditionalNamespaces = setOf("searge") // mojang could be here too for maximal parity, but that's in exchange for a little bit of performance
-        innerClassNameCompletionCandidates = setOf(),
-        inheritanceAdditionalNamespaces = setOf()
+//        innerClassNameCompletionCandidates = setOf(),
+//        inheritanceAdditionalNamespaces = setOf()
     )
 )
 
