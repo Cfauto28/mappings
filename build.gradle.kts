@@ -161,7 +161,7 @@ val mappingConfig = buildMappingConfig {
             add(IntermediaryMappingResolver(versionWorkspace, sharedCacheWorkspace))
             add(YarnMappingResolver(versionWorkspace, yarnProvider))
             add(QuiltMappingResolver(versionWorkspace, quiltProvider))
-            add(HashedMappingResolver(versionWorkspace, sharedCacheWorkspace))
+            add(HashedMappingResolver(versionWorkspace))
             add(SeargeMappingResolver(versionWorkspace, sharedCacheWorkspace))
 
             // Spigot resolvers have to be last
@@ -361,7 +361,7 @@ val webConfig = buildWebConfig {
     namespace("searge", "Searge", "#B91C1C", SeargeMappingResolver.META_LICENSE)
     namespace("intermediary", "Intermediary", "#0369A1", IntermediaryMappingResolver.META_LICENSE)
     namespace("quilt", "Quilt", "#9722FF", QuiltMappingResolver.META_LICENSE)
-    namespace("hashed", "Hashed", "#3344FF", HashedMappingResolver.META_LICENSE)
+    namespace("hashed", "Hashed", "#3344FF")
     namespace("modern-intermediary", "Modern Intermediary", "#0369A1", ModernIntermediaryMappingResolver.META_LICENSE)
     namespace("modern-yarn", "Modern Yarn", "#626262", ModernYarnMappingResolver.META_LICENSE)
     namespace("source", "Official", "#581C87")
