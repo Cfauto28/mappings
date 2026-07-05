@@ -110,6 +110,9 @@ val manifest = VersionManifest(
 )
 val yarnProvider = YarnMetadataProvider(sharedCacheWorkspace)
 val modernYarnProvider = ModernYarnMetadataProvider(sharedCacheWorkspace)
+
+val quiltProvider = QuiltMappingResolver(sharedCacheWorkspace)
+
 val mappingConfig = buildMappingConfig {
     version("1.21.11_unobfuscated")
     version(
@@ -161,13 +164,9 @@ val mappingConfig = buildMappingConfig {
             add(ModernYarnMappingResolver(versionWorkspace, modernYarnProvider))
             add(IntermediaryMappingResolver(versionWorkspace, sharedCacheWorkspace))
             add(YarnMappingResolver(versionWorkspace, yarnProvider))
-            add(
-                WrappingContributor(
-                    SeargeMappingResolver(versionWorkspace, sharedCacheWorkspace),
-                    // remove obfuscated method parameter names, they are a filler from Searge
-                    ::MethodArgSourceFilter
-                )
-            )
+            add(HashedMappingResolver(versionWorkspace, sharedCacheWorkspace))
+            add(QuiltMappingResolver(versionWorkspace, quiltProvider))
+            add(SeargeMappingResolver(versionWorkspace, sharedCacheWorkspace))
 
             // Spigot resolvers have to be last
             if (platform.wantsServer) {
@@ -209,7 +208,7 @@ val analyzer = MappingAnalyzerImpl(
 
 val ancestryIndexNs = "takenaka_node"
 
-val ancestryNamespaces = listOf("modern-intermediary", "mojang", "spigot", "searge",)
+val ancestryNamespaces = listOf("modern-intermediary", "intermediary", "mojang", "spigot", "searge", "hashed")
 
 val ancestryProvider = CachedAncestryProvider(SimpleAncestryProvider(null, ancestryNamespaces))
 
@@ -359,13 +358,15 @@ val webConfig = buildWebConfig {
     index(modularClassSearchIndexOf(JDK_25_BASE_URL))
 
     replaceCraftBukkitVersions("spigot")
-    friendlyNamespaces("modern-yarn", "modern-intermediary", "yarn", "intermediary", "mojang", "spigot", "searge", "source")
-     namespace("mojang", "Mojang", "#4D7C0F", AbstractMojangMappingResolver.META_LICENSE)
+    friendlyNamespaces("modern-yarn", "modern-intermediary", "yarn", "intermediary", "mojang", "spigot", "searge", "hashed", "quilt", "source")
+    namespace("mojang", "Mojang", "#4D7C0F", AbstractMojangMappingResolver.META_LICENSE)
     namespace("spigot", "Spigot", "#CA8A04", AbstractSpigotMappingResolver.META_LICENSE)
     namespace("yarn", "Yarn", "#626262", YarnMappingResolver.META_LICENSE)
     namespace("searge", "Searge", "#B91C1C", SeargeMappingResolver.META_LICENSE)
     namespace("intermediary", "Intermediary", "#0369A1", IntermediaryMappingResolver.META_LICENSE)
     namespace("modern-intermediary", "Modern Intermediary", "#0369A1", ModernIntermediaryMappingResolver.META_LICENSE)
+    namespace("hashed", "Hashed", "#3344FF", null)
+    namespace("quilt", "Quilt", "#9722FF", QuiltMappingResolver.META_LICENSE)
     namespace("modern-yarn", "Modern Yarn", "#626262", ModernYarnMappingResolver.META_LICENSE)
     namespace("source", "Official", "#581C87")
 }
