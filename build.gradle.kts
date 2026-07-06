@@ -207,7 +207,7 @@ val analyzer = MappingAnalyzerImpl(
 
 val ancestryIndexNs = "takenaka_node"
 
-val ancestryNamespaces = listOf("modern-intermediary", "mojang", "spigot", "searge", "hashed", "legacy-intermediaries")
+val ancestryNamespaces = listOf("mojang", "spigot", "searge", "hashed", "modern-intermediary", "legacy-intermediaries")
 
 val ancestryProvider = CachedAncestryProvider(SimpleAncestryProvider(null, ancestryNamespaces))
 
@@ -357,7 +357,7 @@ val webConfig = buildWebConfig {
     index(modularClassSearchIndexOf(JDK_25_BASE_URL))
 
     replaceCraftBukkitVersions("spigot")
-    friendlyNamespaces("mojang", "modern-yarn", "modern-intermediary", "yarn", "intermediary", "quilt", "hashed", "legacy_yarn", "legacy-intermediaries", "spigot", "searge", "source")
+    friendlyNamespaces("mojang", "modern-yarn", "legacy_yarn", "yarn", "quilt", "spigot", "searge", "modern-intermediary", "hashed", "intermediary", "legacy-intermediaries", "source")
      namespace("mojang", "Mojang", "#4D7C0F", AbstractMojangMappingResolver.META_LICENSE)
     namespace("spigot", "Spigot", "#CA8A04", AbstractSpigotMappingResolver.META_LICENSE)
     namespace("yarn", "Yarn", "#626262", YarnMappingResolver.META_LICENSE)
