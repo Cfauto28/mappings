@@ -357,7 +357,7 @@ val webConfig = buildWebConfig {
     index(modularClassSearchIndexOf(JDK_25_BASE_URL))
 
     replaceCraftBukkitVersions("spigot")
-    friendlyNamespaces("mojang", "modern-yarn", "legacy_yarn", "yarn", "quilt", "spigot", "searge", "modern-intermediary", "hashed", "intermediary", "legacy-intermediaries", "source")
+    friendlyNamespaces("mojang", "modern-yarn", "legacy-yarn", "yarn", "quilt", "spigot", "searge", "modern-intermediary", "hashed", "intermediary", "legacy-intermediaries", "source")
      namespace("mojang", "Mojang", "#4D7C0F", AbstractMojangMappingResolver.META_LICENSE)
     namespace("spigot", "Spigot", "#CA8A04", AbstractSpigotMappingResolver.META_LICENSE)
     namespace("yarn", "Yarn", "#626262", YarnMappingResolver.META_LICENSE)
@@ -368,7 +368,7 @@ val webConfig = buildWebConfig {
     namespace("modern-intermediary", "Modern Intermediary", "#0369A1", ModernIntermediaryMappingResolver.META_LICENSE)
     namespace("modern-yarn", "Modern Yarn", "#626262", ModernYarnMappingResolver.META_LICENSE)
     namespace("legacy-intermediaries", "Legacy Intermediaries", "#0369A1", LegacyIntermediariesMappingResolver.META_LICENSE)
-    namespace("legacy_yarn", "Legacy Yarn", "#626262", LegacyYarnMappingResolver.META_LICENSE)
+    namespace("legacy-yarn", "Legacy Yarn", "#626262", LegacyYarnMappingResolver.META_LICENSE)
     namespace("source", "Official", "#581C87")
 }
 
