@@ -113,7 +113,6 @@ val quiltProvider = QuiltMetadataProvider(sharedCacheWorkspace)
 val modernYarnProvider = ModernYarnMetadataProvider(sharedCacheWorkspace)
 val legacyYarnProvider = LegacyYarnMetadataProvider(sharedCacheWorkspace)
 val mappingConfig = buildMappingConfig {
-    version("1.21.11_unobfuscated")
     version(
         manifest
             .range("1.12.2", "26.2") { // change me
@@ -125,9 +124,7 @@ val mappingConfig = buildMappingConfig {
             }
             .map(Version::id)
     )
-    if (manifest.latest.snapshot != manifest.latest.release) {
-        version(manifest.latest.snapshot)
-    }
+
 //    version("26.3-snapshot-1") // latest snapshot, change me
 
     workspace(mappingCacheWorkspace)
@@ -141,7 +138,7 @@ val mappingConfig = buildMappingConfig {
     // remove overrides of java/lang/Object, they are implicit
     intercept(::ObjectOverrideFilter)
     // remove Javadocs from mappings
-//    intercept(::CommentFilter)
+    intercept(::CommentFilter)
 
     contributors { versionWorkspace ->
         val mojangProvider = MojangManifestAttributeProvider(versionWorkspace)
@@ -353,12 +350,12 @@ val webConfig = buildWebConfig {
     )
 
     transformer(CSSInliningTransformer("cdn.jsdelivr.net"))
-//    transformer(MinifyingTransformer())
+    transformer(MinifyingTransformer())
     index(modularClassSearchIndexOf(JDK_25_BASE_URL))
 
     replaceCraftBukkitVersions("spigot")
-    friendlyNamespaces("mojang", "modern-yarn", "legacy-yarn", "yarn", "quilt", "spigot", "searge", "modern-intermediary", "hashed", "intermediary", "legacy-intermediaries", "source")
-     namespace("mojang", "Mojang", "#4D7C0F", AbstractMojangMappingResolver.META_LICENSE)
+    friendlyNamespaces("mojang", "yarn","modern-yarn", "legacy-yarn", "quilt", "searge", "spigot", "modern-intermediary", "hashed", "intermediary", "legacy-intermediaries", "source")
+    namespace("mojang", "Mojang", "#4D7C0F", AbstractMojangMappingResolver.META_LICENSE)
     namespace("spigot", "Spigot", "#CA8A04", AbstractSpigotMappingResolver.META_LICENSE)
     namespace("yarn", "Yarn", "#626262", YarnMappingResolver.META_LICENSE)
     namespace("searge", "Searge", "#B91C1C", SeargeMappingResolver.META_LICENSE)
