@@ -111,7 +111,7 @@ val manifest = VersionManifest(
 val yarnProvider = YarnMetadataProvider(sharedCacheWorkspace)
 val quiltProvider = QuiltMetadataProvider(sharedCacheWorkspace)
 val modernYarnProvider = ModernYarnMetadataProvider(sharedCacheWorkspace)
-val featherProvider = FeatherMetadataProvider(sharedCacheWorkspace)
+val legacyYarnProvider = LegacyYarnMetadataProvider(sharedCacheWorkspace)
 val mappingConfig = buildMappingConfig {
     version("1.21.11_unobfuscated")
     version(
@@ -163,8 +163,8 @@ val mappingConfig = buildMappingConfig {
             add(YarnMappingResolver(versionWorkspace, yarnProvider))
             add(QuiltMappingResolver(versionWorkspace, quiltProvider))
             add(HashedMappingResolver(versionWorkspace))
-            add(CalamusMappingResolver(versionWorkspace, sharedCacheWorkspace))
-            add(FeatherMappingResolver(versionWorkspace, featherProvider))
+            add(LegacyIntermediariesMappingResolver(versionWorkspace, sharedCacheWorkspace))
+            add(LegacyYarnMappingResolver(versionWorkspace, legacyYarnProvider))
             add(SeargeMappingResolver(versionWorkspace, sharedCacheWorkspace))
 
             // Spigot resolvers have to be last
@@ -207,7 +207,7 @@ val analyzer = MappingAnalyzerImpl(
 
 val ancestryIndexNs = "takenaka_node"
 
-val ancestryNamespaces = listOf("modern-intermediary", "mojang", "spigot", "searge", "hashed", "calamus")
+val ancestryNamespaces = listOf("modern-intermediary", "mojang", "spigot", "searge", "hashed", "legacy-intermediaries")
 
 val ancestryProvider = CachedAncestryProvider(SimpleAncestryProvider(null, ancestryNamespaces))
 
@@ -357,7 +357,7 @@ val webConfig = buildWebConfig {
     index(modularClassSearchIndexOf(JDK_25_BASE_URL))
 
     replaceCraftBukkitVersions("spigot")
-    friendlyNamespaces("mojang", "modern-yarn", "modern-intermediary", "yarn", "intermediary", "quilt", "hashed", "feather", "calamus", "spigot", "searge", "source")
+    friendlyNamespaces("mojang", "modern-yarn", "modern-intermediary", "yarn", "intermediary", "quilt", "hashed", "legacy_yarn", "legacy-intermediaries", "spigot", "searge", "source")
      namespace("mojang", "Mojang", "#4D7C0F", AbstractMojangMappingResolver.META_LICENSE)
     namespace("spigot", "Spigot", "#CA8A04", AbstractSpigotMappingResolver.META_LICENSE)
     namespace("yarn", "Yarn", "#626262", YarnMappingResolver.META_LICENSE)
@@ -367,8 +367,8 @@ val webConfig = buildWebConfig {
     namespace("hashed", "Hashed", "#DC29DD")
     namespace("modern-intermediary", "Modern Intermediary", "#0369A1", ModernIntermediaryMappingResolver.META_LICENSE)
     namespace("modern-yarn", "Modern Yarn", "#626262", ModernYarnMappingResolver.META_LICENSE)
-    namespace("calamus", "Calamus", "#0369A1", CalamusMappingResolver.META_LICENSE)
-    namespace("feather", "Feather", "#626262", FeatherMappingResolver.META_LICENSE)
+    namespace("legacy-intermediaries", "Legacy Intermediaries", "#0369A1", LegacyIntermediariesMappingResolver.META_LICENSE)
+    namespace("legacy_yarn", "Legacy Yarn", "#626262", LegacyYarnMappingResolver.META_LICENSE)
     namespace("source", "Official", "#581C87")
 }
 
