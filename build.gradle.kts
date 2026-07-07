@@ -163,6 +163,7 @@ val mappingConfig = buildMappingConfig {
             add(LegacyIntermediariesMappingResolver(versionWorkspace, sharedCacheWorkspace))
             add(LegacyYarnMappingResolver(versionWorkspace, legacyYarnProvider))
             add(SeargeMappingResolver(versionWorkspace, sharedCacheWorkspace))
+            add(MCPMappingResolver(versionWorkspace, sharedCacheWorkspace))
 
             // Spigot resolvers have to be last
             if (platform.wantsServer) {
@@ -354,7 +355,7 @@ val webConfig = buildWebConfig {
     index(modularClassSearchIndexOf(JDK_25_BASE_URL))
 
     replaceCraftBukkitVersions("spigot")
-    friendlyNamespaces("mojang", "yarn","modern-yarn", "legacy-yarn", "quilt", "searge", "spigot", "modern-intermediary", "hashed", "intermediary", "legacy-intermediaries", "source")
+    friendlyNamespaces("mojang", "yarn","modern-yarn", "legacy-yarn", "quilt", "mcp", "searge", "spigot", "modern-intermediary", "hashed", "intermediary", "legacy-intermediaries", "source")
     namespace("mojang", "Mojang", "#4D7C0F", AbstractMojangMappingResolver.META_LICENSE)
     namespace("spigot", "Spigot", "#CA8A04", AbstractSpigotMappingResolver.META_LICENSE)
     namespace("yarn", "Yarn", "#626262", YarnMappingResolver.META_LICENSE)
@@ -366,6 +367,7 @@ val webConfig = buildWebConfig {
     namespace("modern-yarn", "Modern Yarn", "#626262", ModernYarnMappingResolver.META_LICENSE)
     namespace("legacy-intermediaries", "Legacy Intermediaries", "#0369A1", LegacyIntermediariesMappingResolver.META_LICENSE)
     namespace("legacy-yarn", "Legacy Yarn", "#626262", LegacyYarnMappingResolver.META_LICENSE)
+    namespace("mcp", "MCP", "#8A3636", MCPMappingResolver.META_LICENSE)
     namespace("source", "Official", "#581C87")
 }
 
