@@ -357,7 +357,7 @@ val webConfig = buildWebConfig {
     index(modularClassSearchIndexOf(JDK_25_BASE_URL))
 
     replaceCraftBukkitVersions("spigot")
-    friendlyNamespaces("mojang", "yarn","modern-yarn", "mcp", "quilt", "legacy-yarn", "searge", "spigot", "modern-intermediary", "hashed", "intermediary", "legacy-intermediaries", "source")
+    friendlyNamespaces("mojang", "yarn","modern-yarn", "quilt", "searge", "mcp", "legacy-yarn", "spigot", "modern-intermediary", "hashed", "intermediary", "legacy-intermediaries", "source")
     namespace("mojang", "Mojang", "#4D7C0F", AbstractMojangMappingResolver.META_LICENSE)
     namespace("spigot", "Spigot", "#CA8A04", AbstractSpigotMappingResolver.META_LICENSE)
     namespace("yarn", "Yarn", "#626262", YarnMappingResolver.META_LICENSE)
