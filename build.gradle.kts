@@ -163,7 +163,7 @@ val mappingConfig = buildMappingConfig {
             add(QuiltMappingResolver(versionWorkspace, quiltProvider))
             add(HashedMappingResolver(versionWorkspace))
             add(CalamusMappingResolver(versionWorkspace, sharedCacheWorkspace))
-            add(FeatherMappingResolver(versionWorkspace, legacyYarnProvider))
+            add(FeatherMappingResolver(versionWorkspace, featherProvider))
             add(SeargeMappingResolver(versionWorkspace, sharedCacheWorkspace))
             add(MCPMappingResolver(versionWorkspace, sharedCacheWorkspace))
 
