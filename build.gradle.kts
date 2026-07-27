@@ -115,7 +115,7 @@ val featherProvider = FeatherMetadataProvider(sharedCacheWorkspace)
 val mappingConfig = buildMappingConfig {
     version(
         manifest
-            .range("1..7.10", "26.2") { // change me
+            .range("1.7.10", "26.2") { // change me
                 // exclude 1.20, 1.20.3, 1.20.5 and 1.21.2 - hotfixed versions
                 // exclude 1.16 and 1.10.1 they don't have most mappings and are basically not used at all
                 // exclude 1.8.9, client-only update - no Spigot mappings, no thank you
