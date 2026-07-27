@@ -44,7 +44,7 @@ group = "me.kcra.takenaka" // change me
 // format: <oldest version>+<newest version>[-SNAPSHOT]
 // this is included in META-INF/MANIFEST.MF under Implementation-Version
 // be nice to people who use the bundles and don't change the format
-version = "1.8+26.2" // change me
+version = "1.7.10+26.2" // change me
 
 /**
  * A three-way choice of mappings.
@@ -115,12 +115,12 @@ val featherProvider = FeatherMetadataProvider(sharedCacheWorkspace)
 val mappingConfig = buildMappingConfig {
     version(
         manifest
-            .range("1.8", "26.2") { // change me
+            .range("1..7.10", "26.2") { // change me
                 // exclude 1.20, 1.20.3, 1.20.5 and 1.21.2 - hotfixed versions
                 // exclude 1.16 and 1.10.1 they don't have most mappings and are basically not used at all
                 // exclude 1.8.9, client-only update - no Spigot mappings, no thank you
                 // exclude 1.9.1 and 1.9.3 - no mappings at all
-                exclude("1.16", "1.10.1", "1.8.9", "1.9.1", "1.9.3", "1.20", "1.20.3", "1.20.5", "1.21.2", "1.8.1", "1.8.2")
+                exclude("1.16", "1.10.1", "1.8.9", "1.9.1", "1.9.3", "1.20", "1.20.3", "1.20.5", "1.21.2", "1.8.1", "1.8.2", "1.8.3")
                 // include only releases, no snapshots
                 includeTypes(Version.Type.RELEASE)
             }
@@ -357,7 +357,7 @@ val webConfig = buildWebConfig {
     index(modularClassSearchIndexOf(JDK_25_BASE_URL))
 
     replaceCraftBukkitVersions("spigot")
-    friendlyNamespaces("mojang", "yarn","modern-yarn", "quilt", "feather", "searge", "mcp", "spigot", "modern-intermediary", "hashed", "intermediary", "calamus", "source")
+    friendlyNamespaces("mojang", "yarn","modern-yarn", "quilt", "feather", "searge", "mcp", "spigot", "bukkit" "modern-intermediary", "hashed", "intermediary", "calamus", "source")
     namespace("mojang", "Mojang", "#4D7C0F", AbstractMojangMappingResolver.META_LICENSE)
     namespace("spigot", "Spigot", "#CA8A04", AbstractSpigotMappingResolver.META_LICENSE)
     namespace("yarn", "Yarn", "#626262", YarnMappingResolver.META_LICENSE)
@@ -370,6 +370,7 @@ val webConfig = buildWebConfig {
     namespace("calamus", "Calamus", "#0369A1", CalamusMappingResolver.META_LICENSE)
     namespace("feather", "Feather", "#626262", FeatherMappingResolver.META_LICENSE)
     namespace("mcp", "MCP", "#8A3636", MCPMappingResolver.META_LICENSE)
+    namespace("bukkit", "Bukkit", "#DB781E", BukkitMappingResolver.META_LICENSE)
     namespace("source", "Official", "#581C87")
 }
 
