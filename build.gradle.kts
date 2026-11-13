@@ -22,6 +22,7 @@ import net.fabricmc.mappingio.format.tiny.Tiny2FileReader
 import net.fabricmc.mappingio.format.tiny.Tiny2FileWriter
 import net.fabricmc.mappingio.tree.MappingTree
 import net.fabricmc.mappingio.tree.MemoryMappingTree
+import java.net.URL
 import kotlin.io.path.bufferedReader
 import kotlin.io.path.writeText
 import kotlin.io.path.writer
