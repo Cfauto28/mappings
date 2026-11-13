@@ -144,7 +144,22 @@ val mappingConfig = buildMappingConfig {
 
     contributors { versionWorkspace ->
         val mojangProvider = MojangManifestAttributeProvider(versionWorkspace)
-        //val spigotProvider = SpigotManifestProvider(versionWorkspace)
+        val spigotProvider = SpigotManifestProvider(
+            workspace = versionWorkspace,
+            spigotUrlProvider = object : SpigotUrlProvider() {
+                override fun getBuildDataFile(fileName: String?, reference: String?): URL {
+                    return project.file("mappings/spigot/builddata/$reference/$fileName").toURI().toURL()
+                }
+
+                override fun getCraftBukkitFile(fileName: String?, reference: String?): URL {
+                    return project.file("mappings/spigot/craftbukkit/$reference/$fileName").toURI().toURL()
+                }
+
+                override fun getSpigotVersionManifest(version: String): URL {
+                    return project.file("mappings/spigot/$version.json").toURI().toURL()
+                }
+            }
+        )
 
         buildList {
             if (platform.wantsServer) {
@@ -168,7 +183,7 @@ val mappingConfig = buildMappingConfig {
             add(MCPMappingResolver(versionWorkspace, sharedCacheWorkspace))
 
             // Spigot resolvers have to be last
-            /*if (platform.wantsServer) {
+            if (platform.wantsServer) {
                 val link = LegacySpigotMappingPrepender.Link()
 
                 add(
@@ -180,7 +195,7 @@ val mappingConfig = buildMappingConfig {
                     )
                 )
                 add(link.createPrependingContributor(SpigotMemberMappingResolver(versionWorkspace, spigotProvider)))
-            }*/
+            }
         }
     }
 
@@ -198,14 +213,14 @@ val mappingConfig = buildMappingConfig {
 val mappingProvider = ResolvingMappingProvider(mappingConfig, manifest)
 val analyzer = MappingAnalyzerImpl(
     AnalysisOptions(
-        //innerClassNameCompletionCandidates = setOf("spigot"),
+        innerClassNameCompletionCandidates = setOf("spigot"),
         inheritanceAdditionalNamespaces = setOf("searge") // mojang could be here too for maximal parity, but that's in exchange for a little bit of performance
     )
 )
 
 val ancestryIndexNs = "takenaka_node"
 
-val ancestryNamespaces = listOf("mojang", /*"spigot",*/ "searge", "hashed", "modern-intermediary", "calamus")
+val ancestryNamespaces = listOf("mojang", "spigot", "searge", "hashed", "modern-intermediary", "calamus")
 
 val ancestryProvider = CachedAncestryProvider(SimpleAncestryProvider(null, ancestryNamespaces))
 
@@ -355,9 +370,9 @@ val webConfig = buildWebConfig {
     index(modularClassSearchIndexOf(JDK_25_BASE_URL))
 
     //replaceCraftBukkitVersions("spigot")
-    friendlyNamespaces("yarn", "modern-yarn", "mojang", "quilt", "feather", "searge", "mcp", /*"spigot",*/ "bukkit", "modern-intermediary", "hashed", "intermediary", "calamus", "source")
+    friendlyNamespaces("yarn", "modern-yarn", "mojang", "quilt", "feather", "searge", "mcp", "spigot", "bukkit", "modern-intermediary", "hashed", "intermediary", "calamus", "source")
     namespace("mojang", "Mojang", "#4D7C0F", AbstractMojangMappingResolver.META_LICENSE)
-    //namespace("spigot", "Spigot", "#CA8A04", AbstractSpigotMappingResolver.META_LICENSE)
+    namespace("spigot", "Spigot", "#CA8A04", AbstractSpigotMappingResolver.META_LICENSE)
     namespace("yarn", "Yarn", "#626262", YarnMappingResolver.META_LICENSE)
     namespace("searge", "Searge", "#B91C1C", SeargeMappingResolver.META_LICENSE)
     namespace("intermediary", "Intermediary", "#0369A1", IntermediaryMappingResolver.META_LICENSE)
